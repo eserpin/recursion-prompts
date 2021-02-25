@@ -163,7 +163,7 @@ var reverse = function(string) {
   }
   // if string length is 2 or more
   if (string.length >= 1) {
-    // recursively call reverse on
+    // return last letter in addition to reverse of string without last letter
     return string[string.length - 1] + reverse(string.substring(0, string.length - 1));
   }
 };
@@ -172,11 +172,11 @@ var reverse = function(string) {
 var palindrome = function(string) {
   if (string.length <= 1) {
     return true;
+  } else if(string[0].toUpperCase() === string[string.length - 1].toUpperCase()) {
+    return palindrome(string.substring(1, string.length - 1));
+  } else {
+    return false;
   }
-  else {
-    return string
-  }
-
 };
 
 // 11. Write a function that returns the remainder of x divided by y without using the
@@ -258,11 +258,54 @@ var countKeysInObj = function(obj, key) {
 // countValuesInObj(obj, 'r') // 2
 // countValuesInObj(obj, 'e') // 1
 var countValuesInObj = function(obj, value) {
+  // create count
+  var count = 0;
+  // base case
+  if (typeof(obj) === 'string') {
+  // current obj is a primitive
+    // if  current obj is value
+    if (obj === value) {
+      // return 1
+      return 1;
+    } else {
+    // else
+      // return 0
+      return 0;
+    }
+  } else {
+  // if current obj is not primitive,
+  for (var key in obj) {
+    // iterate through keys in obj
+      // count is countValuesInObj(obj[key], value)
+      count += countValuesInObj(obj[key], value);
+  }
+  // return count
+  return count;
+  }
 };
 
 // 24. Find all keys in an object (and nested objects) by a provided name and rename
 // them to a provided new name while preserving the value stored at that key.
 var replaceKeysInObj = function(obj, oldKey, newKey) {
+  // iterate through obj
+  for (var key in obj) {
+    // if current key is oldkey
+    if (key === oldKey) {
+      // obj[newKey] is obj[oldKey]
+      obj[newKey] = obj[oldKey];
+      // remove obj[oldKey]
+      delete obj[oldKey];
+    }
+    // if obj[currentKey] is an object
+    if (typeof(obj[key]) !== 'string') {
+      // call function on obj[currentKey]
+      replaceKeysInObj(obj[key], oldKey, newKey);
+    }
+  }
+
+  //return obj
+  return obj;
+
 };
 
 // 25. Get the first n Fibonacci numbers. In the Fibonacci sequence, each subsequent
